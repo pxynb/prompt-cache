@@ -99,6 +99,7 @@ class ModuleRef:
     args: List[Argument]
     modules: List[ModuleRef]
 
+    
     def __init__(self, spec: lxml.etree.Element = None):
         if spec is not None:
             self._process(spec)

@@ -1,0 +1,187 @@
+{
+  "config": {
+    "dataset_path": "/data/xingye/data/glaive-function-calling-v2/model_training/tool_predict/tool_selection_train.json",
+    "schema_path": "/home/xingye/prompt-cache/function_call/schema/function.xml",
+    "vectorsearch_path": "/home/xingye/prompt-cache/function_call/predictor/vectorsearch.py",
+    "model_path": "/data/zy/models/Qwen/Qwen3/Qwen3-8B-Base",
+    "samples": 34838,
+    "gpu_ids": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "scenario_gpu_binding": {
+      "predictor_gpu_cache": 0,
+      "full_gpu_no_cache": 1,
+      "full_gpu_cache": 2,
+      "predictor_gpu_no_cache": 3
+    },
+    "full_prompt_probe_tokens_max": 5157,
+    "full_warmup_status": {
+      "predictor_gpu_no_cache": {
+        "ok": true,
+        "error": null
+      },
+      "full_gpu_cache": {
+        "ok": true,
+        "error": null
+      },
+      "predictor_gpu_cache": {
+        "ok": true,
+        "error": null
+      },
+      "full_gpu_no_cache": {
+        "ok": true,
+        "error": null
+      }
+    },
+    "note": "每个实验固定一张GPU；每个实验开始前先做一次full prompt warmup（不计入统计）；每个worker内add_schema仅执行一次；实验目标为predictor_gpu_cache。"
+  },
+  "scenarios": [
+    {
+      "name": "predictor_gpu_cache",
+      "group": "实验目标",
+      "metrics": {
+        "samples_total": 34838,
+        "samples_ok": 34838,
+        "samples_error": 0,
+        "accuracy": 0.9443710890407027,
+        "accuracy_relaxed": 0.9443710890407027,
+        "parse_rate": 0.9798782938170962,
+        "parse_rate_relaxed": 0.9798782938170962,
+        "predictor_top1_accuracy": 0.9606751248636546,
+        "accuracy_when_predictor_correct": 0.98302856459902,
+        "end_to_end_ms_avg": 3692.24741698589,
+        "end_to_end_ms_p95": 6296.128796885023,
+        "prefill_latency_ms_avg": 123.25624775296615,
+        "prefill_latency_ms_p95": 138.86109619140626,
+        "model_pipeline_ms_avg": 3687.245648257402,
+        "model_pipeline_ms_p95": 6291.290278470842,
+        "request_to_first_token_ms_avg": 130.80595942146016,
+        "request_to_first_token_ms_p95": 147.25201271357946,
+        "predictor_latency_ms_avg": 4.5917490307895354,
+        "predictor_latency_ms_p95": 5.995845433790237,
+        "cache_process_ms_avg": 2.3547520750226885,
+        "cache_process_ms_p95": 2.6537967324256897,
+        "active_kv_mb_avg": 83.7031178239279,
+        "active_kv_mb_p95": 96.75,
+        "baseline_allocated_mb_avg": 10923.707957019365,
+        "baseline_allocated_mb_p95": 10924.1962890625,
+        "absolute_peak_vram_mb_avg": 11056.218602848474,
+        "absolute_peak_vram_mb_p95": 11076.501538085937,
+        "absolute_peak_vram_mb_max": 11112.6591796875,
+        "peak_vram_mb_avg": 132.5106458291099,
+        "peak_vram_mb_p95": 152.43466796875003,
+        "peak_vram_mb_max": 199.5556640625
+      }
+    },
+    {
+      "name": "full_gpu_no_cache",
+      "group": "对比基线",
+      "metrics": {
+        "samples_total": 34838,
+        "samples_ok": 34838,
+        "samples_error": 0,
+        "accuracy": 0.9559389172742407,
+        "accuracy_relaxed": 0.9559389172742407,
+        "parse_rate": 0.9999425914231587,
+        "parse_rate_relaxed": 0.9999425914231587,
+        "end_to_end_ms_avg": 4217.403472163445,
+        "end_to_end_ms_p95": 6993.053407111438,
+        "prefill_latency_ms_avg": 640.6399991294808,
+        "prefill_latency_ms_p95": 648.9184875488281,
+        "model_pipeline_ms_avg": 4216.953501191642,
+        "model_pipeline_ms_p95": 6992.546170682181,
+        "request_to_first_token_ms_avg": 644.2805672609086,
+        "request_to_first_token_ms_p95": 652.6798699516803,
+        "predictor_latency_ms_avg": 0.0,
+        "predictor_latency_ms_p95": 0.0,
+        "cache_process_ms_avg": 1.2984751079727022,
+        "cache_process_ms_p95": 1.4161328315734865,
+        "active_kv_mb_avg": 0.0,
+        "active_kv_mb_p95": 0.0,
+        "baseline_allocated_mb_avg": 10883.473297947823,
+        "baseline_allocated_mb_p95": 10883.4814453125,
+        "absolute_peak_vram_mb_avg": 13179.624472376496,
+        "absolute_peak_vram_mb_p95": 13189.1201171875,
+        "absolute_peak_vram_mb_max": 13210.4501953125,
+        "peak_vram_mb_avg": 2296.1511744286727,
+        "peak_vram_mb_p95": 2305.6563232421877,
+        "peak_vram_mb_max": 2326.98779296875
+      }
+    },
+    {
+      "name": "full_gpu_cache",
+      "group": "消融",
+      "metrics": {
+        "samples_total": 34838,
+        "samples_ok": 34838,
+        "samples_error": 0,
+        "accuracy": 0.9567426373500201,
+        "accuracy_relaxed": 0.9567426373500201,
+        "parse_rate": 0.9999712957115793,
+        "parse_rate_relaxed": 0.9999712957115793,
+        "end_to_end_ms_avg": 3611.1521798150775,
+        "end_to_end_ms_p95": 6324.902078078594,
+        "prefill_latency_ms_avg": 128.98094484848355,
+        "prefill_latency_ms_p95": 147.85975341796876,
+        "model_pipeline_ms_avg": 3610.719350821934,
+        "model_pipeline_ms_p95": 6324.457657779567,
+        "request_to_first_token_ms_avg": 130.74146986164652,
+        "request_to_first_token_ms_p95": 149.72729632281698,
+        "predictor_latency_ms_avg": 0.0,
+        "predictor_latency_ms_p95": 0.0,
+        "cache_process_ms_avg": 0.9042959929785489,
+        "cache_process_ms_p95": 1.015679955482483,
+        "active_kv_mb_avg": 718.3125,
+        "active_kv_mb_p95": 718.3125,
+        "baseline_allocated_mb_avg": 10883.47309176189,
+        "baseline_allocated_mb_p95": 10883.48046875,
+        "absolute_peak_vram_mb_avg": 11698.31856820991,
+        "absolute_peak_vram_mb_p95": 11707.3974609375,
+        "absolute_peak_vram_mb_max": 11727.986328125,
+        "peak_vram_mb_avg": 814.8454764480192,
+        "peak_vram_mb_p95": 823.92431640625,
+        "peak_vram_mb_max": 844.5224609375
+      }
+    },
+    {
+      "name": "predictor_gpu_no_cache",
+      "group": "消融",
+      "metrics": {
+        "samples_total": 34838,
+        "samples_ok": 34838,
+        "samples_error": 0,
+        "accuracy": 0.9577472874447442,
+        "accuracy_relaxed": 0.9577472874447442,
+        "parse_rate": 0.9965554853895172,
+        "parse_rate_relaxed": 0.9965554853895172,
+        "predictor_top1_accuracy": 0.9606751248636546,
+        "accuracy_when_predictor_correct": 0.9969523126568662,
+        "end_to_end_ms_avg": 3609.838976664203,
+        "end_to_end_ms_p95": 6249.081999389456,
+        "prefill_latency_ms_avg": 147.06593613778145,
+        "prefill_latency_ms_p95": 166.8793800354004,
+        "model_pipeline_ms_avg": 3604.8431402662354,
+        "model_pipeline_ms_p95": 6244.301992631517,
+        "request_to_first_token_ms_avg": 152.83125434357802,
+        "request_to_first_token_ms_p95": 173.18716561421752,
+        "predictor_latency_ms_avg": 4.621872847748994,
+        "predictor_latency_ms_p95": 6.065476109506562,
+        "cache_process_ms_avg": 0.42008941958963314,
+        "cache_process_ms_p95": 0.5154976218938828,
+        "active_kv_mb_avg": 0.0,
+        "active_kv_mb_p95": 0.0,
+        "baseline_allocated_mb_avg": 10334.125181378025,
+        "baseline_allocated_mb_p95": 10334.1337890625,
+        "absolute_peak_vram_mb_avg": 10628.649480567308,
+        "absolute_peak_vram_mb_p95": 10661.961645507812,
+        "absolute_peak_vram_mb_max": 10686.51708984375,
+        "peak_vram_mb_avg": 294.5242991892832,
+        "peak_vram_mb_p95": 327.834765625,
+        "peak_vram_mb_max": 352.3876953125
+      }
+    }
+  ]
+}

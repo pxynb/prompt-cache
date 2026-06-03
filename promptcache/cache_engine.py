@@ -64,8 +64,12 @@ class TokenSequenceCache:
 
     def upload(self, device: str):
         if self.device_cache is None:
-            self.device_cache = [(kv[0].to(device, non_blocking=True),
-                                  kv[1].to(device, non_blocking=True)) for kv in self.host_cache]
+            target = torch.device(device)
+            if len(self.host_cache) > 0 and self.host_cache[0][0].device == target:
+                self.device_cache = self.host_cache
+            else:
+                self.device_cache = [(kv[0].to(device, non_blocking=True),
+                                      kv[1].to(device, non_blocking=True)) for kv in self.host_cache]
 
     def free(self):
         # need to invoke gc.collect() manually later
@@ -141,20 +145,16 @@ class PromptCache:
             update_len = sum(map(len, updates))
             st = offset
             ed = st + update_len
-            update_caches = [m.cache for m in updates]
-
             for i in range(len(self.device_cache)):
                 k_cache_tgt, v_cache_tgt = self.device_cache[i]
-                k_chunks = [cache_i[i][0] for cache_i in update_caches]
-                v_chunks = [cache_i[i][1] for cache_i in update_caches]
-                if len(k_chunks) == 1:
-                    k_merged = k_chunks[0]
-                    v_merged = v_chunks[0]
-                else:
-                    k_merged = torch.cat(k_chunks, dim=1)
-                    v_merged = torch.cat(v_chunks, dim=1)
-                k_cache_tgt[:, st:ed, :].copy_(k_merged, non_blocking=True)
-                v_cache_tgt[:, st:ed, :].copy_(v_merged, non_blocking=True)
+                cursor = st
+                for m in updates:
+                    m_len = len(m)
+                    k_src, v_src = m.cache[i]
+                    nxt = cursor + m_len
+                    k_cache_tgt[:, cursor:nxt, :].copy_(k_src, non_blocking=True)
+                    v_cache_tgt[:, cursor:nxt, :].copy_(v_src, non_blocking=True)
+                    cursor = nxt
 
             offset = ed
 
@@ -298,6 +298,9 @@ class SchemaCache:
                             if self.target_device != 'cpu':
                                 k_cache_tc = k_cache_tc.cpu()
                                 v_cache_tc = v_cache_tc.cpu()
+                                if torch.cuda.is_available():
+                                    k_cache_tc = k_cache_tc.pin_memory()
+                                    v_cache_tc = v_cache_tc.pin_memory()
 
                             tc_cache.append((k_cache_tc, v_cache_tc))
 
